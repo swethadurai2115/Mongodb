@@ -1,19 +1,20 @@
-const mongodb = require('mongodb');
-const MongoClient = mongodb.MongoClient;
-const ObjectID = mongodb.ObjectId;
-let database;
+const mongoose = require('mongoose');
 
-async function getDatabase(){
-    const client = await MongoClient.connect('mongodb://127.0.0.1:27017');
-    database = client.db('library');
-
-    if(!database) {
-        console.log('Database not connected');
+async function getDatabase() {
+    try {
+        await mongoose.connect('mongodb+srv://swethadurai2115:s18NYjZgV5EFqPCX@cluster0.2d9dz.mongodb.net/?retryWrites=true&w=majority', {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+        });
+        console.log('Database connected');
+        return mongoose.connection; // Ensure you're returning the connection
+    } catch (error) {
+        console.log('Connection error:', error);
+        throw error; // Rethrow the error for handling in your route
     }
-    return database;
 }
 
 module.exports = {
     getDatabase,
-    ObjectID
-}
+    ObjectID: mongoose.Types.ObjectId
+};
